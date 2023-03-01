@@ -85,7 +85,6 @@ source "hyperv-iso" "vm" {
   communicator          = "winrm"
   cpus                  = "${var.cpus}"
   disk_size             = "${var.disk_size}"
-  enable_dynamic_memory = "true"
   enable_secure_boot    = false
   generation            = 2
   guest_additions_mode  = "disable"
@@ -95,7 +94,7 @@ source "hyperv-iso" "vm" {
   output_directory      = "${var.output_directory}"
   secondary_iso_images  = ["${var.secondary_iso_image}"]
   shutdown_timeout      = "30m"
-  skip_export           = true
+  skip_export           = false
   switch_name           = "${var.switch_name}"
   temp_path             = "."
   vlan_id               = "${var.vlan_id}"
@@ -103,6 +102,9 @@ source "hyperv-iso" "vm" {
   winrm_password        = "password"
   winrm_timeout         = "8h"
   winrm_username        = "Administrator"
+  enable_virtualization_extensions = true
+  enable_mac_spoofing   = true
+  first_boot_device     = "DVD"
 }
 
 build {
@@ -124,12 +126,6 @@ build {
     script            = "./extra/scripts/phase-2.ps1"
   }
 
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    script            = "./extra/scripts/phase-3.ps1"
-  }
-
   provisioner "windows-restart" {
     pause_before          = "1m0s"
     restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
@@ -139,7 +135,8 @@ build {
   provisioner "powershell" {
     elevated_password = "password"
     elevated_user     = "Administrator"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
+    pause_before      = "30s"
+    script            = "./extra/scripts/install_docker_hyperv_wsl_features.ps1"
   }
 
   provisioner "windows-restart" {
@@ -158,26 +155,7 @@ build {
     elevated_password = "password"
     elevated_user     = "Administrator"
     pause_before      = "30s"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
-  }
-
-  provisioner "windows-restart" {
-    pause_before          = "30s"
-    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-    restart_timeout       = "2h"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-  }
-
-provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    pause_before      = "30s"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
+    script            = "./extra/scripts/install_docker_desktop.ps1"
   }
 
   provisioner "windows-restart" {
@@ -196,7 +174,7 @@ provisioner "powershell" {
     elevated_password = "password"
     elevated_user     = "Administrator"
     pause_before      = "30s"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
+    script            = "./extra/scripts/start_docker_desktop.ps1"
   }
 
   provisioner "windows-restart" {
@@ -214,12 +192,26 @@ provisioner "powershell" {
   provisioner "powershell" {
     elevated_password = "password"
     elevated_user     = "Administrator"
-    script            = "./extra/scripts/phase-5a.software.ps1"
+    pause_before      = "30s"
+    script            = "./extra/scripts/setup_sam_cli_requirements.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
   }
 
   provisioner "powershell" {
     elevated_password = "password"
     elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
     script            = "./extra/scripts/phase-5d.windows-compress.ps1"
   }
 
