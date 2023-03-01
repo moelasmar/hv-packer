@@ -20,16 +20,16 @@ $env:Path += ";C:\ProgramData\chocolatey\lib\make\tools\install\bin"
 
 # Install Node.js 12.22.12
 md "C:\nodejs12"
-Start-BitsTransfer -Source "https://nodejs.org/dist/v12.22.12/win-x64/node.exe"  -Destination "C:\nodejs12\node.exe"
+(New-Object Net.WebClient).DownloadFile("https://nodejs.org/dist/v12.22.12/win-x64/node.exe", "C:\nodejs12\node.exe")
 # Install Node.js 14.21.1
 md "C:\nodejs14"
-Start-BitsTransfer -Source "https://nodejs.org/dist/v14.21.1/win-x64/node.exe"  -Destination "C:\nodejs14\node.exe"
+(New-Object Net.WebClient).DownloadFile("https://nodejs.org/dist/v14.21.1/win-x64/node.exe", "C:\nodejs14\node.exe")
 # Install Node.js 16.18.1
 md "C:\nodejs16"
-Start-BitsTransfer -Source "https://nodejs.org/dist/v16.18.1/win-x64/node.exe"  -Destination "C:\nodejs16\node.exe"
+(New-Object Net.WebClient).DownloadFile("https://nodejs.org/dist/v16.18.1/win-x64/node.exe", "C:\nodejs16\node.exe")
 
 md "C:\nodejs18"
-Start-BitsTransfer -Source "https://nodejs.org/dist/v18.12.0/win-x64/node.exe"  -Destination "C:\nodejs16\node.exe"
+(New-Object Net.WebClient).DownloadFile("https://nodejs.org/dist/v18.12.0/win-x64/node.exe", "C:\nodejs16\node.exe")
 
 
 # Install Java 11
@@ -88,7 +88,6 @@ $env:Path += ";C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MS
 [Environment]::SetEnvironmentVariable("SAM_CLI_DEV", "1" , "Machine")
 [Environment]::SetEnvironmentVariable("CARGO_LAMBDA_VERSION", "v0.17.1" , "Machine")
 $env:CARGO_LAMBDA_VERSION = "v0.17.1"
-
 [Environment]::SetEnvironmentVariable("TMPDIR", "%TEMP%" , "Machine")
 [Environment]::SetEnvironmentVariable("TMP", "%TEMP%", "Machine")
 [Environment]::SetEnvironmentVariable("PYTHON_HOME", "C:\\Python37" , "Machine")
@@ -106,7 +105,7 @@ $env:CARGO_LAMBDA_VERSION = "v0.17.1"
 refreshenv
 
 # install Rust
-Start-BitsTransfer -Source "https://win.rustup.rs/"  -Destination "C:\rustup-init.exe"
+(New-Object Net.WebClient).DownloadFile("https://win.rustup.rs/", "C:\rustup-init.exe")
 C:\rustup-init.exe -y --default-host x86_64-pc-windows-msvc --default-toolchain stable
 $env:Path += ";C:\Users\Administrator\.cargo\bin"
 
@@ -117,8 +116,7 @@ rustup target add aarch64-unknown-linux-gnu --toolchain stable
 choco install zig --force -y
 
 $env:Path += ";C:\ProgramData\chocolatey\lib\zig\tools\zig-windows-x86_64-0.10.1"
-
-Start-BitsTransfer -Source "https://github.com/cargo-lambda/cargo-lambda/releases/download/$env:CARGO_LAMBDA_VERSION/cargo-lambda-$env:CARGO_LAMBDA_VERSION.windows-x64.zip"  -Destination "C:\Users\Administrator\cargo-lambda.zip"
+(New-Object Net.WebClient).DownloadFile("https://github.com/cargo-lambda/cargo-lambda/releases/download/$env:CARGO_LAMBDA_VERSION/cargo-lambda-$env:CARGO_LAMBDA_VERSION.windows-x64.zip", "C:\Users\Administrator\cargo-lambda.zip")
 Expand-Archive -DestinationPath C:\Users\Administrator\.cargo\bin C:\Users\Administrator\cargo-lambda.zip
 
 Remove-Item "C:\Users\Administrator\cargo-lambda.zip" -Force
