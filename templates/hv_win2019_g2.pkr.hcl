@@ -1,3 +1,12 @@
+variable "memory" {
+  type    = string
+  default = "1024"
+}
+
+variable "cpus" {
+  type    = string
+  default = "1"
+}
 
 variable "disk_size" {
   type    = string
@@ -74,19 +83,18 @@ source "hyperv-iso" "vm" {
   boot_command          = ["a<enter><wait>a<enter><wait>a<enter><wait>a<enter>"]
   boot_wait             = "1s"
   communicator          = "winrm"
-  cpus                  = 4
+  cpus                  = "${var.cpus}"
   disk_size             = "${var.disk_size}"
-  enable_dynamic_memory = "true"
   enable_secure_boot    = false
   generation            = 2
   guest_additions_mode  = "disable"
   iso_checksum          = "${var.iso_checksum_type}:${var.iso_checksum}"
   iso_url               = "${var.iso_url}"
-  memory                = 4096
+  memory                = "${var.memory}"
   output_directory      = "${var.output_directory}"
   secondary_iso_images  = ["${var.secondary_iso_image}"]
   shutdown_timeout      = "30m"
-  skip_export           = true
+  skip_export           = false
   switch_name           = "${var.switch_name}"
   temp_path             = "."
   vlan_id               = "${var.vlan_id}"
@@ -94,6 +102,9 @@ source "hyperv-iso" "vm" {
   winrm_password        = "password"
   winrm_timeout         = "8h"
   winrm_username        = "Administrator"
+  enable_virtualization_extensions = true
+  enable_mac_spoofing   = true
+  first_boot_device     = "DVD"
 }
 
 build {
@@ -115,97 +126,10 @@ build {
     script            = "./extra/scripts/phase-2.ps1"
   }
 
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    script            = "./extra/scripts/phase-3.ps1"
-  }
-
   provisioner "windows-restart" {
     pause_before          = "1m0s"
     restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
     restart_timeout       = "2h"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
-  }
-
-  provisioner "windows-restart" {
-    pause_before          = "30s"
-    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-    restart_timeout       = "2h"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    pause_before      = "30s"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
-  }
-
-  provisioner "windows-restart" {
-    pause_before          = "30s"
-    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-    restart_timeout       = "2h"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-  }
-
-provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    pause_before      = "30s"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
-  }
-
-  provisioner "windows-restart" {
-    pause_before          = "30s"
-    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-    restart_timeout       = "2h"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    pause_before      = "30s"
-    script            = "./extra/scripts/phase-4.windows-updates.ps1"
-  }
-
-  provisioner "windows-restart" {
-    pause_before          = "30s"
-    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-    restart_timeout       = "2h"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    script            = "./extra/scripts/phase-5a.software.ps1"
   }
 
   provisioner "powershell" {

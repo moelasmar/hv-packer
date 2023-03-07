@@ -71,6 +71,10 @@ Remove-SmbShare -Name C -ErrorAction SilentlyContinue -Force
 
 # enable Docker auto run
 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Docker Desktop" `
+    -Value 2
+
+# enable Docker auto run
+Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" -Name "Docker Desktop" `
     -Value "$env:ProgramFiles\Docker\Docker\Docker Desktop.exe"
 
 Write-Host "Disabling automatic updates and usage statistics"
