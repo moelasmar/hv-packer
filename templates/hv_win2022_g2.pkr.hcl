@@ -132,6 +132,81 @@ build {
     restart_timeout       = "2h"
   }
 
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    script            = "./extra/scripts/phase-4.windows-updates.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/phase-4.windows-updates.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/phase-4.windows-updates.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/phase-4.windows-updates.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
 #  provisioner "powershell" {
 #    elevated_password = "password"
 #    elevated_user     = "Administrator"

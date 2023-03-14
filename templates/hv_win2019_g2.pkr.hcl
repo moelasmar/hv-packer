@@ -169,7 +169,7 @@ build {
     inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
   }
 
-provisioner "powershell" {
+  provisioner "powershell" {
     elevated_password = "password"
     elevated_user     = "Administrator"
     pause_before      = "30s"
