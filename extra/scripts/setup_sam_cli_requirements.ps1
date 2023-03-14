@@ -222,6 +222,10 @@ C:\Python37\python -m pip install awscli
 C:\Python38\python -m pip install awscli
 C:\Python39\python -m pip install awscli
 
+#install cygwin
+choco install cygwin --force -y
+$env:Path += ";C:\cygwin\bin"
+
 
 [Environment]::SetEnvironmentVariable("Path", $Env:Path, "Machine")
 
