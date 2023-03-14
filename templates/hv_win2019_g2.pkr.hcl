@@ -135,6 +135,7 @@ build {
   provisioner "powershell" {
     elevated_password = "password"
     elevated_user     = "Administrator"
+    pause_before      = "30s"
     script            = "./extra/scripts/phase-5d.windows-compress.ps1"
   }
 
