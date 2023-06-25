@@ -211,35 +211,6 @@ build {
     elevated_password = "password"
     elevated_user     = "Administrator"
     pause_before      = "30s"
-    script            = "./extra/scripts/phase-5d.windows-compress.ps1"
-  }
-
-  provisioner "file" {
-    destination = "C:\\Windows\\System32\\Sysprep\\unattend.xml"
-    source      = "${var.sysprep_unattended}"
-  }
-
-  provisioner "powershell" {
-    inline = ["Write-Output Phase-5-Deprovisioning", "if (!(Test-Path -Path $Env:SystemRoot\\system32\\Sysprep\\unattend.xml)){ Write-Output 'No file';exit (10)}", "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /shutdown /quiet /unattend:C:\\Windows\\system32\\sysprep\\unattend.xml"]
-  }
-
-
-  provisioner "windows-restart" {
-    pause_before          = "30s"
-    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-    restart_timeout       = "2h"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-  }
-
-  provisioner "powershell" {
-    elevated_password = "password"
-    elevated_user     = "Administrator"
-    pause_before      = "30s"
     script            = "./extra/scripts/activate-windows-part1.ps1"
   }
 
@@ -367,6 +338,34 @@ build {
     elevated_password = "password"
     elevated_user     = "Administrator"
     inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/phase-5d.windows-compress.ps1"
+  }
+
+  provisioner "file" {
+    destination = "C:\\Windows\\System32\\Sysprep\\unattend.xml"
+    source      = "${var.sysprep_unattended}"
+  }
+
+  provisioner "powershell" {
+    inline = ["Write-Output Phase-5-Deprovisioning", "if (!(Test-Path -Path $Env:SystemRoot\\system32\\Sysprep\\unattend.xml)){ Write-Output 'No file';exit (10)}", "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /shutdown /quiet /unattend:C:\\Windows\\system32\\sysprep\\unattend.xml"]
   }
 
 }

@@ -67,14 +67,14 @@ function whichWindows {
          throw "Buildnumber empty, cannot continue"
      }
     }
-    function printWindowsVersion {
-        if ($global:os) {
-            Write-Output "Phase 1 [INFO] - Windows Server "$global:os" found."
-        }
-        else {
-            Write-Output "Phase 1 [INFO] - Unknown version of Windows Server found."
-        }
+function printWindowsVersion {
+    if ($global:os) {
+        Write-Output "Phase 1 [INFO] - Windows Server "$global:os" found."
     }
+    else {
+        Write-Output "Phase 1 [INFO] - Unknown version of Windows Server found."
+    }
+}
 Write-Output "Phase-4 [START] - Updates"
 # let's check which windows
 whichWindows
