@@ -96,7 +96,7 @@ source "hyperv-iso" "vm" {
   shutdown_timeout      = "30m"
   skip_export           = false
   switch_name           = "${var.switch_name}"
-  temp_path             = "."
+  temp_path             = "D:/"
   vlan_id               = "${var.vlan_id}"
   vm_name               = "${var.vm_name}"
   winrm_password        = "password"
@@ -214,55 +214,44 @@ build {
 #    script            = "./extra/scripts/install_docker_hyperv_wsl_features.ps1"
 #  }
 #
-#  provisioner "windows-restart" {
-#    pause_before          = "30s"
-#    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-#    restart_timeout       = "2h"
-#  }
-#
-#  provisioner "powershell" {
-#    elevated_password = "password"
-#    elevated_user     = "Administrator"
-#    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-#  }
-#
-#  provisioner "powershell" {
-#    elevated_password = "password"
-#    elevated_user     = "Administrator"
-#    pause_before      = "30s"
-#    script            = "./extra/scripts/install_docker_desktop.ps1"
-#  }
-#
-#  provisioner "windows-restart" {
-#    pause_before          = "30s"
-#    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-#    restart_timeout       = "2h"
-#  }
-#
-#  provisioner "powershell" {
-#    elevated_password = "password"
-#    elevated_user     = "Administrator"
-#    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-#  }
-#
-#  provisioner "powershell" {
-#    elevated_password = "password"
-#    elevated_user     = "Administrator"
-#    pause_before      = "30s"
-#    script            = "./extra/scripts/start_docker_desktop.ps1"
-#  }
-#
-#  provisioner "windows-restart" {
-#    pause_before          = "30s"
-#    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
-#    restart_timeout       = "2h"
-#  }
-#
-#  provisioner "powershell" {
-#    elevated_password = "password"
-#    elevated_user     = "Administrator"
-#    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
-#  }
+
+provisioner "powershell" {
+  elevated_password = "password"
+  elevated_user     = "Administrator"
+  pause_before      = "30s"
+  script            = "./extra/scripts/install_docker_desktop.ps1"
+}
+
+provisioner "windows-restart" {
+  pause_before          = "30s"
+  restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+  restart_timeout       = "2h"
+}
+
+provisioner "powershell" {
+  elevated_password = "password"
+  elevated_user     = "Administrator"
+  inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+}
+
+provisioner "powershell" {
+  elevated_password = "password"
+  elevated_user     = "Administrator"
+  pause_before      = "30s"
+  script            = "./extra/scripts/start_docker_desktop.ps1"
+}
+
+provisioner "windows-restart" {
+  pause_before          = "30s"
+  restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+  restart_timeout       = "2h"
+}
+
+provisioner "powershell" {
+  elevated_password = "password"
+  elevated_user     = "Administrator"
+  inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+}
 #
 #  provisioner "powershell" {
 #    elevated_password = "password"
@@ -297,6 +286,57 @@ build {
 
   provisioner "powershell" {
     inline = ["Write-Output Phase-5-Deprovisioning", "if (!(Test-Path -Path $Env:SystemRoot\\system32\\Sysprep\\unattend.xml)){ Write-Output 'No file';exit (10)}", "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /shutdown /quiet /unattend:C:\\Windows\\system32\\sysprep\\unattend.xml"]
+  }
+
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/activate-windows-part1.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/activate-windows-part2.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
   }
 
 }
