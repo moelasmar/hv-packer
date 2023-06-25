@@ -339,4 +339,99 @@ provisioner "powershell" {
     inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
   }
 
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/enable_hyperv.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/enable_wsl_and_update_wsl2.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/enable_wsl_and_update_wsl2.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/install_docker_desktop_and_start_docker.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    pause_before      = "30s"
+    script            = "./extra/scripts/install_docker_desktop_and_start_docker.ps1"
+  }
+
+  provisioner "windows-restart" {
+    pause_before          = "30s"
+    restart_check_command = "powershell -command \"& {Write-Output 'restarted.'}\""
+    restart_timeout       = "2h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "password"
+    elevated_user     = "Administrator"
+    inline            = ["Write-Host \"Pausing before next stage\";Start-Sleep -Seconds ${var.upgrade_timeout}"]
+  }
+
 }
